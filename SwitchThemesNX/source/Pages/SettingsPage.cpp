@@ -115,7 +115,7 @@ bool SettingsPage::InstallSysmodule()
 	}
 	catch (const std::exception& ex)
 	{
-		Dialog(Lang::T("Error installing sysmodule: ")s + ex.what());
+		Dialog(std::string(Lang::T("Error installing sysmodule: ")) + ex.what());
 		return false;
 	}
 }
@@ -137,7 +137,7 @@ bool SettingsPage::RemoveSysmodule(bool dialogs)
 	}
 	catch (const std::exception& ex)
 	{
-		Dialog(Lang::T("Error uninstalling sysmodule: ")s + ex.what());
+		Dialog(std::string(Lang::T("Error uninstalling sysmodule: ")) + ex.what());
 		return false;
 	}
 }

@@ -124,7 +124,7 @@ void UninstallPage::Render(int X, int Y)
 			if (success)
 			{
 				Dialog(
-					Lang::T("Done, everything theme-related has been removed, restart your console to apply the changes.\n")
+					std::string(Lang::T("Done, everything theme-related has been removed, restart your console to apply the changes.\n")) +
 					"This removed any home menu patches as well, you should restart this app before installing themes again."
 				);
 			}
