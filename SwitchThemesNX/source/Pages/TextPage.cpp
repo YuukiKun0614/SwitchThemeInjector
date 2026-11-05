@@ -1,3 +1,4 @@
+#include <utility>
 #include "../Localization.hpp"
 #include "TextPage.hpp"
 #include "../Version.hpp"
@@ -48,12 +49,25 @@ void CreditsPage::Render(int X, int Y)
 	Utils::ImGuiSetupPage(this, X, Y);
 	ImGui::SetCursorPosY(20);
 	ImGui::PushFont(font30);
-	ImGui::TextWrapped(creditsText.c_str());
+	std::string localizedCredits = creditsText;
+    if (Lang::IsJapanese()) {
+        const std::pair<std::string, std::string> words[] = {
+            {"NXThemes installer by exelix", "NXThemes Installer 開発：exelix"},
+            {"Core Ver.", "コアバージョン "},
+            {"Source: ", "ソース："},
+            {"Donations: ", "寄付："},
+        };
+        for (const auto& kv : words) {
+            auto pos = localizedCredits.find(kv.first);
+            if (pos != std::string::npos) localizedCredits.replace(pos, kv.first.size(), kv.second);
+        }
+    }
+    ImGui::TextWrapped(localizedCredits.c_str());
 	ImGui::PopFont();
 
 	ImGui::PushFont(font25);
 	ImGui::TextWrapped(
-		"Thanks to:\n"
+		Lang::T("Thanks to:\n"
 		"Migush for themezer\n"
 		"Syroot for BinaryData lib\n"
 		"AboodXD for Bntx editor and sarc lib\n"
@@ -63,7 +77,7 @@ void CreditsPage::Render(int X, int Y)
 		"switch-stuff on github for the font converter\n"
 		"Fincs for the hybrid_app template\n"
 		"Everyone from the DearImgui github repo"
-	);
+	));
 
 	ImGui::PopFont();
 	Utils::ImGuiSetWindowScrollable();

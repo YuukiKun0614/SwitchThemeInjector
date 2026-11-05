@@ -51,9 +51,9 @@ INCLUDES	:=	include Libs
 EXEFS_SRC	:=	exefs_src
 ROMFS	:=	romfs
 
-APP_TITLE	:=	NXThemes Installer
-APP_AUTHOR	:=	exelix
-APP_VERSION := 3.0.2
+APP_TITLE	:=	NXThemes Installer 日本語版
+APP_AUTHOR	:=	exelix / 日本語版改修
+APP_VERSION := 3.0.2-JP
 
 GITVER ?= Unknown
 #---------------------------------------------------------------------------------

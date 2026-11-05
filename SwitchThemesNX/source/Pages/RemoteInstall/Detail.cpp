@@ -62,7 +62,7 @@ void RemoteInstall::DetailPage::UserDownload(Action action)
 		auto entry = ThemeEntry::FromMemory(theme);
 		if (!entry->CanInstall())
 		{
-			DialogBlocking("This theme is not valid");
+			DialogBlocking(Lang::T("This theme is not valid"));
 			return;
 		}
 

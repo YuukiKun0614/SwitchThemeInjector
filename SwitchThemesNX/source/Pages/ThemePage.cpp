@@ -133,7 +133,7 @@ void ThemesPage::SetPage(int num, int index)
 
 		if (!DirectoryFiles.size())
 		{
-			lblPage = CurrentDir + " There are no files in this folder. Press B to go back.";
+			lblPage = CurrentDir + Lang::T(" There are no files in this folder. Press B to go back.");
 			return;
 		}
 		else 
@@ -184,10 +184,10 @@ void ThemesPage::Render(int X, int Y)
 		}
 		else {
 			ImGui::TextWrapped(
-				"There's nothing here, copy your themes in the themes folder on your sd and try again.\n\n"
+				Lang::T("There's nothing here, copy your themes in the themes folder on your sd and try again.\n\n"
 				"If you do have a themes folder in your sd with themes make sure that the name is all lowercase and check your SD for corruption.\n\n"
 				"You can find more themes on themezer.net"
-			);
+			));
 		}
 	}
 
@@ -297,9 +297,9 @@ void ThemesPage::UpdatePageText()
 	std::stringstream ss;
 
 	if (SelectedFiles.size() != 0)
-		ss << "(" << SelectedFiles.size() << " selected) ";
+		ss << "(" << SelectedFiles.size() << Lang::T(" selected) ");
 
-	ss << CurrentDir << " - Page " << pageNum + 1 << "/" << pageCount;
+	ss << CurrentDir << Lang::T(" - Page ") << pageNum + 1 << "/" << pageCount;
 
 	lblPage = ss.str();
 

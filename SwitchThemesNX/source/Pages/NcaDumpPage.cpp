@@ -41,9 +41,9 @@ void NcaDumpPage::Render(int X, int Y)
 	ImGui::PushFont(font30);
 
 	ImGui::TextWrapped(
-		"This page allows extracting the RomFS of the home menu and related titles.\n\n"
+		Lang::T("This page allows extracting the RomFS of the home menu and related titles.\n\n"
 		"This option allows extracting the common szs files (for example, ResidentMenu.szs) to your SD card so you can create custom layouts. For simply installing themes you do not need this feature, it is done automaticaly done during installation."
-	);
+	));
 
 	if (ImGui::Button(Lang::T("Extract szs layout files")))
 	{
@@ -54,13 +54,13 @@ void NcaDumpPage::Render(int X, int Y)
 				if (fs::Exists(fs::path::SystemDataFolder + "extracted/"))
 					fs::DeleteDirectory(fs::path::SystemDataFolder + "extracted/");
 
-				DisplayLoading("Extracting qlaunch...");
+				DisplayLoading(Lang::T("Extracting qlaunch..."));
 				WriteExtracted("extracted/qlaunch", RomfsCache::GetContent(ThemeTargetInfo::QlaunchID));
 
-				DisplayLoading("Extracting playerselect...");
+				DisplayLoading(Lang::T("Extracting playerselect..."));
 				WriteExtracted("extracted/playerselect", RomfsCache::GetContent(ThemeTargetInfo::PslID));
 
-				DisplayLoading("Extracting mypage...");
+				DisplayLoading(Lang::T("Extracting mypage..."));
 				WriteExtracted("extracted/mypage", RomfsCache::GetContent(ThemeTargetInfo::UserPageID));
 
 				WriteExtractedVersion();
@@ -69,7 +69,7 @@ void NcaDumpPage::Render(int X, int Y)
 			}
 			catch (const std::exception& ex)
 			{
-				DialogBlocking("Error while extracting the layout files: " + std::string(ex.what()));
+				DialogBlocking(std::string(Lang::T("Error while extracting the layout files: ")) + ex.what());
 			}
 		});
 	}
@@ -103,7 +103,7 @@ void NcaDumpPage::Render(int X, int Y)
 				}
 				catch (const std::exception& ex)
 				{
-					DialogBlocking("Error while extracting the layout files: " + std::string(ex.what()));
+					DialogBlocking(std::string(Lang::T("Error while extracting the layout files: ")) + ex.what());
 				}
 			});
 	}

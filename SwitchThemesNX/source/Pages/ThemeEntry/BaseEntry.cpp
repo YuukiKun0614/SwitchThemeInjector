@@ -1,3 +1,4 @@
+#include "../../Localization.hpp"
 #include <filesystem>
 #include <memory>
 #include <exception>
@@ -77,7 +78,7 @@ bool ThemeEntry::Install(bool ShowDialogs)
 	if (ShowDialogs) 
 	{
 		if (InstallLog.empty())
-			DialogBlocking("Done, restart the console to apply the changes");
+			DialogBlocking(Lang::T("Done, restart the console to apply the changes"));
 		else
 			DialogBlocking("Done, restart the console to apply the changes.\n\nThe following warnings were generated:\n" + InstallLog);
 

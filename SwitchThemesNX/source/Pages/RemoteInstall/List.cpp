@@ -153,7 +153,7 @@ void RemoteInstall::ListPage::DownloadClicked()
 
 			if (folderName == "")
 			{
-				DialogBlocking("Couldn't create a folder on the SD card to download");
+				DialogBlocking(Lang::T("Couldn't create a folder on the SD card to download"));
 				return;
 			}
 
@@ -206,7 +206,7 @@ void RemoteInstall::ListPage::DownloadClicked()
 				ThemesPage::Instance->SelectElementOnRescan(OutFirstFilaName);
 
 			if (numFailed != urls.size())
-				DialogBlocking("Themes have been downloaded to your sd card, you can install them from the Themes page in the main menu");
+				DialogBlocking(Lang::T("Themes have been downloaded to your sd card, you can install them from the Themes page in the main menu"));
 
 			PopPage(this);
 		});

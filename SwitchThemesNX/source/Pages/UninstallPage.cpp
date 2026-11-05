@@ -72,7 +72,7 @@ void UninstallPage::Render(int X, int Y)
 		PushFunction([]() {
 			if (!YesNoPage::Ask(
 				"This will remove the installed theme for all the supported home menu parts.\n"
-				"Do you want to continue ?"
+				"Do you want to continue ?")
 			))
 				return;
 
@@ -89,7 +89,7 @@ void UninstallPage::Render(int X, int Y)
 		PushFunction([]() {
 			if (!YesNoPage::Ask(
 				"This will remove the custom hekate boot screen.\n"
-				"Do you want to continue ?"
+				"Do you want to continue ?")
 			))
 				return;
 
@@ -104,17 +104,17 @@ void UninstallPage::Render(int X, int Y)
 	if (Utils::ImGuiCenterButton("Uninstall everything", 550))
 	{
 		PushFunction([]() {
-			if (!YesNoPage::Ask(
+			if (!YesNoPage::Ask(Lang::T(
 				"This will remove everything related to custom themes, such as:\n"
 				"- The currently installed theme\n"
 				"- Applied theme patches\n"
 				"- The theme update check sysmodule\n"
 				"- Any custom hekate boot logo\n\n"
-				"Do you want to continue ?"
+				"Do you want to continue ?")
 			))
 				return;
 
-			DisplayLoading("Clearing custom themes data...");
+			DisplayLoading(Lang::T("Clearing custom themes data..."));
 
 			bool success = SettingsPage::RemoveSysmodule(false);
 			success &= RemoveTheme(true);
@@ -125,7 +125,7 @@ void UninstallPage::Render(int X, int Y)
 			{
 				Dialog(
 					std::string(Lang::T("Done, everything theme-related has been removed, restart your console to apply the changes.\n")) +
-					"This removed any home menu patches as well, you should restart this app before installing themes again."
+					Lang::T("This removed any home menu patches as well, you should restart this app before installing themes again.")
 				);
 			}
 		});

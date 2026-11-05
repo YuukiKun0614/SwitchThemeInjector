@@ -14,7 +14,7 @@ public:
 
 	ThemeUpdateDownloader(const std::string& url, Result& r) : BaseWorker({url}, true), OutResult(r) {
 		appendUrlToError = false;
-		SetLoadingLine("Checking for patch updates...");
+		SetLoadingLine(Lang::T("Checking for patch updates..."));
 	}
 
 protected:
@@ -41,9 +41,9 @@ void QlaunchPatchPage::Render(int X, int Y)
 	Utils::ImGuiSetupPage(this, X, Y);
 
 	ImGui::TextWrapped(
-		"Since firmware 9.0 some parts of the home menu require to be patched in order to install themes.\n"
+		Lang::T("Since firmware 9.0 some parts of the home menu require to be patched in order to install themes.\n"
 		"If you see this screen it means you don't have the patches needed for your firmware installed."
-	);	
+	));	
 
 	if (PatchMng::QlaunchBuildId() != "")
 	{
@@ -63,9 +63,9 @@ void QlaunchPatchPage::Render(int X, int Y)
 	{		
 		ImGui::TextWrapped(Lang::T("This version is not currently supported, after a new firmware is released it can take a few days for the patches to be updated"));
 		ImGui::TextWrapped(
-			"New patches are now automatically downloaded from the internet whenever you launch this application. "
+			Lang::T("New patches are now automatically downloaded from the internet whenever you launch this application. "
 			"If you want you can also check for updates now."
-		);
+		));
 		
 		if (ImGui::Button(Lang::T("Check for updates")))
 			PushFunction([this]() { CheckForUpdates(); });
@@ -78,7 +78,12 @@ void QlaunchPatchPage::Render(int X, int Y)
 				ImGui::PushStyleColor(ImGuiCol_Text, Colors::Red);
 			else ImGui::PushStyleColor(ImGuiCol_Text, Colors::Highlight);
 			
-			ImGui::TextWrapped(updateMessageString.c_str());
+			// Translate the known offline/DNS error without masking other error details.
+            if (Lang::IsJapanese() &&
+                updateMessageString.find("Couldn't resolve host name") != std::string::npos)
+                ImGui::TextWrapped("接続先のホスト名を解決できません（ネットワーク未接続またはDNSエラー）。");
+            else
+                ImGui::TextWrapped(Lang::T(updateMessageString));
 			ImGui::PopStyleColor();
 		}
 
@@ -93,16 +98,16 @@ void QlaunchPatchPage::Render(int X, int Y)
 	else if (patchStatus == PatchMng::InstallResult::SDError)
 	{
 		ImGui::TextWrapped(
-			"There was an error reading or writing files from your SD card, this usually means your SD is corrupted.\n"
+			Lang::T("There was an error reading or writing files from your SD card, this usually means your SD is corrupted.\n"
 			"Please run the archive bit fixer, if that still doesn't work format your SD and set it up from scratch."
-		);
+		));
 	}
 	else if (patchStatus == PatchMng::InstallResult::UnsupportedCFW)
 	{
 		ImGui::TextWrapped(
-			"Your CFW doesn't seem to be supported.\n"
+			Lang::T("Your CFW doesn't seem to be supported.\n"
 			"If your CFW is supported and you're seeing this there's probably something wrong with your SD card, install your CFW again."
-		);
+		));
 	}
 	else if (patchStatus == PatchMng::InstallResult::Ok)
 	{
