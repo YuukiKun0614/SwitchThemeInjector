@@ -1,3 +1,4 @@
+#include "../Localization.hpp"
 #include <algorithm>
 #include <sstream>
 #include "ThemePage.hpp"
@@ -176,9 +177,9 @@ void ThemesPage::Render(int X, int Y)
 	if (DisplayEntries.size() == 0) {
 		if (CurrentDir != fs::path::ThemesFolder)
 		{
-			ImGui::TextWrapped("This folder is empty.");
+			ImGui::TextWrapped(Lang::T("This folder is empty."));
 
-			if (ImGui::Button("Go to the previous folder"))
+			if (ImGui::Button(Lang::T("Go to the previous folder")))
 				SetDir(fs::GetParentDir(CurrentDir));
 		}
 		else {
@@ -197,7 +198,7 @@ void ThemesPage::Render(int X, int Y)
 		goto QUIT_RENDERING;
 
 	ImGui::SetCursorPosY(570);
-	ImGui::TextUnformatted(lblCommands ? lblCommands : "");
+	ImGui::TextUnformatted(Lang::T(lblCommands ? lblCommands : ""));
 
 	{
 		Utils::ImGuiSetupPage("ThemesList", X, Y, DefaultWinFlags & ~ImGuiWindowFlags_NoScrollbar);
@@ -387,7 +388,7 @@ void ThemesPage::Update()
 
 			if (!entry->Install(false))
 			{
-				Dialog("Installing a theme failed, the process was cancelled");
+				Dialog(Lang::T("Installing a theme failed, the process was cancelled"));
 				break;
 			}
 
@@ -401,7 +402,7 @@ void ThemesPage::Update()
 		}
 
 		if (!combinedInstallLog.empty())
-			Dialog("The themes were installed, however the following warnings have been generated: \n\n" + combinedInstallLog);
+			Dialog(Lang::T("The themes were installed, however the following warnings have been generated: \n\n") + combinedInstallLog);
 
 		ClearSelection();
 		SetPage(pageNum);		

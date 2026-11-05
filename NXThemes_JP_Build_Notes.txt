@@ -1,0 +1,6 @@
+This is a source modification, not a finished .nro.
+Use the repository SwitchThemesNX/Makefile and devkitPro/devkitA64 to build.
+Language config on Switch: sdmc:/config/NXThemesInstaller/language.txt
+Optional custom translations: sdmc:/config/NXThemesInstaller/ja.tsv
+Original files: NXThemes_JP_Originals/
+Do not overwrite your working NRO until the new NRO is verified.

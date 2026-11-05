@@ -1,3 +1,4 @@
+#include "../Localization.hpp"
 #include "DialogPages.hpp"
 #include "../ViewFunctions.hpp"
 
@@ -30,7 +31,7 @@ void DialogPage::Render(int X, int Y)
 	Utils::ImGuiSetupWin("DialogContent", 20, 20, DefaultWinFlags & ~ImGuiWindowFlags_NoScrollbar);
 	ImGui::SetWindowFocus();
 	ImGui::PushTextWrapPos(0.0f);
-	ImGui::TextUnformatted(text.c_str());
+	ImGui::TextUnformatted(Lang::T(text.c_str()));
 	ImGui::PopTextWrapPos();
 	Utils::ImGuiSetWindowScrollable();
 	Utils::ImGuiCloseWin();
@@ -68,15 +69,15 @@ void YesNoPage::Render(int X, int Y)
 	ImGui::PushFont(font30);
 	ImGui::SetCursorPosY(30);
 	ImGui::PushTextWrapPos(0.0f);
-	ImGui::TextUnformatted(text.c_str());
+	ImGui::TextUnformatted(Lang::T(text.c_str()));
 	ImGui::PopTextWrapPos();
 
 	int res = -1;
 
 	if (multilineLayout)
 	{
-		if (Utils::ImGuiCenterButton(yesBtn)) res = 0;
-		if (Utils::ImGuiCenterButton(noBtn)) res = 1;
+		if (Utils::ImGuiCenterButton(Lang::T(yesBtn))) res = 0;
+		if (Utils::ImGuiCenterButton(Lang::T(noBtn))) res = 1;
 	}
 	else
 	{

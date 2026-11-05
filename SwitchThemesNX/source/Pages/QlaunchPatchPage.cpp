@@ -1,3 +1,4 @@
+#include "../Localization.hpp"
 #include "QlaunchPatchPage.hpp"
 #include "RemoteInstall/Worker.hpp"
 #include "../ViewFunctions.hpp"
@@ -46,7 +47,7 @@ void QlaunchPatchPage::Render(int X, int Y)
 
 	if (PatchMng::QlaunchBuildId() != "")
 	{
-		ImGui::Text("Your home menu version is the following (BuildID) :");
+		ImGui::Text(Lang::T("Your home menu version is the following (BuildID) :"));
 		ImGui::PushStyleColor(ImGuiCol_Text, Colors::Highlight);
 		Utils::ImGuiCenterString(PatchMng::QlaunchBuildId());
 		ImGui::PopStyleColor();
@@ -54,19 +55,19 @@ void QlaunchPatchPage::Render(int X, int Y)
 	else 
 	{
 		ImGui::PushStyleColor(ImGuiCol_Text, Colors::Red);
-		ImGui::Text("Error: couldn't detect your home menu version");
+		ImGui::Text(Lang::T("Error: couldn't detect your home menu version"));
 		ImGui::PopStyleColor();
 	}
 
 	if (patchStatus == PatchMng::InstallResult::MissingIps) 
 	{		
-		ImGui::TextWrapped("This version is not currently supported, after a new firmware is released it can take a few days for the patches to be updated");
+		ImGui::TextWrapped(Lang::T("This version is not currently supported, after a new firmware is released it can take a few days for the patches to be updated"));
 		ImGui::TextWrapped(
 			"New patches are now automatically downloaded from the internet whenever you launch this application. "
 			"If you want you can also check for updates now."
 		);
 		
-		if (ImGui::Button("Check for updates"))
+		if (ImGui::Button(Lang::T("Check for updates")))
 			PushFunction([this]() { CheckForUpdates(); });
 
 		if (updateMessageString != "")
@@ -82,11 +83,11 @@ void QlaunchPatchPage::Render(int X, int Y)
 		}
 
 		ImGui::TextWrapped(
-			"If you don't want to connect your console to the internet you can manually download the patches by following the the instructions at:"
+			Lang::T("If you don't want to connect your console to the internet you can manually download the patches by following the the instructions at:")
 		);
 		
 		ImGui::PushStyleColor(ImGuiCol_Text, Colors::Highlight);
-		ImGui::Text("https://github.com/exelix11/theme-patches");
+		ImGui::Text(Lang::T("https://github.com/exelix11/theme-patches"));
 		ImGui::PopStyleColor();
 	}
 	else if (patchStatus == PatchMng::InstallResult::SDError)
@@ -106,7 +107,7 @@ void QlaunchPatchPage::Render(int X, int Y)
 	else if (patchStatus == PatchMng::InstallResult::Ok)
 	{
 		ImGui::PushStyleColor(ImGuiCol_Text, Colors::Highlight);
-		ImGui::Text("Successfully updated, reboot your console !");
+		ImGui::Text(Lang::T("Successfully updated, reboot your console !"));
 		ImGui::PopStyleColor();
 	}
 

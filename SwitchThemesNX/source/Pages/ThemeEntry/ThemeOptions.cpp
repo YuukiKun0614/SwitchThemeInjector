@@ -1,3 +1,4 @@
+#include "../../Localization.hpp"
 #include <variant>
 #include <utility>
 #include <string>
@@ -124,7 +125,7 @@ void ThemeOptionsDialog::InstallOnlyLayout()
 	auto entry = NxEntry("theme", std::move(files));
 	if (!entry.CanInstall())
 	{
-		Dialog("Failed to build the theme file. Open an issue on github.\n" + entry.CannotInstallReason);
+		Dialog(Lang::T("Failed to build the theme file. Open an issue on github.\n") + entry.CannotInstallReason);
 		return;
 	}
 

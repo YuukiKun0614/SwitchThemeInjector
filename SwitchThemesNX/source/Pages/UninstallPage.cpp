@@ -1,3 +1,4 @@
+#include "../Localization.hpp"
 #include <string>
 #include <exception>
 #include "UninstallPage.hpp"
@@ -16,7 +17,7 @@ namespace
 		}
 		catch (const std::exception& ex)
 		{
-			Dialog("Error uninstalling theme: " + std::string(ex.what()));
+			Dialog(Lang::T("Error uninstalling theme: ") + std::string(ex.what()));
 			return false;
 		}
 		return true;
@@ -31,7 +32,7 @@ namespace
 		}
 		catch (const std::exception& ex)
 		{
-			Dialog("Error removing boot logo file: " + std::string(ex.what()));
+			Dialog(Lang::T("Error removing boot logo file: ") + std::string(ex.what()));
 			return false;
 		}
 		return true;
@@ -45,7 +46,7 @@ namespace
 		}
 		catch (const std::exception& ex)
 		{
-			Dialog("Error while removing lockscreen patches: " + std::string(ex.what()));
+			Dialog(Lang::T("Error while removing lockscreen patches: ") + std::string(ex.what()));
 			return false;
 		}
 		return true;
@@ -62,7 +63,7 @@ void UninstallPage::Render(int X, int Y)
 	Utils::ImGuiSetupPage(this, X, Y);
 	ImGui::PushFont(font30);
 
-	ImGui::TextWrapped("Use these options to uninstall the currently installed themes.");
+	ImGui::TextWrapped(Lang::T("Use these options to uninstall the currently installed themes."));
 
 	ImGui::PushStyleColor(ImGuiCol_Button, u32(0x5B700009f));
 
@@ -78,7 +79,7 @@ void UninstallPage::Render(int X, int Y)
 			DisplayLoading("Loading...");
 
 			if (RemoveTheme(false))
-				Dialog("Done, all the installed themes have been removed, restart your console to apply the changes");
+				Dialog(Lang::T("Done, all the installed themes have been removed, restart your console to apply the changes"));
 		});
 	}
 	PAGE_RESET_FOCUS;
@@ -93,12 +94,12 @@ void UninstallPage::Render(int X, int Y)
 				return;
 
 			if (RemoveBootlogo())
-				Dialog("The hekate boot logo has been removed, restart your console to apply the changes");
+				Dialog(Lang::T("The hekate boot logo has been removed, restart your console to apply the changes"));
 		});
 	}
 
 	ImGui::NewLine();
-	ImGui::TextWrapped("In case you're facing unexpected crashes, use the following option to remove everything related to themes including fsmitm folders, the version check sysmodule and theme patches.");
+	ImGui::TextWrapped(Lang::T("In case you're facing unexpected crashes, use the following option to remove everything related to themes including fsmitm folders, the version check sysmodule and theme patches."));
 
 	if (Utils::ImGuiCenterButton("Uninstall everything", 550))
 	{
@@ -123,7 +124,7 @@ void UninstallPage::Render(int X, int Y)
 			if (success)
 			{
 				Dialog(
-					"Done, everything theme-related has been removed, restart your console to apply the changes.\n"
+					Lang::T("Done, everything theme-related has been removed, restart your console to apply the changes.\n")
 					"This removed any home menu patches as well, you should restart this app before installing themes again."
 				);
 			}

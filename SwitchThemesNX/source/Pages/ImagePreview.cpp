@@ -1,3 +1,4 @@
+#include "../Localization.hpp"
 #include "ImagePreview.hpp"
 #include "../ViewFunctions.hpp"
 #include <format>
@@ -16,7 +17,7 @@ void ImagePreview::Render(int X, int Y)
 	auto sz = ImGui::CalcTextSize("HelloWorld");
 	Utils::ImGuiCenterString(label);
 
-	/*ImGui::Text("%d, %d %dx%d", 
+	/*ImGui::Text(Lang::T("%d, %d %dx%d"), 
 		img ? 0 : 1,
 		img->IsValid() ? 0 : 1,
 		img ? img->Width : 0, 

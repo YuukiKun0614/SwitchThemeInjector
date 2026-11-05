@@ -1,3 +1,9 @@
+#include "../Localization.hpp"
+#include <cstdlib>
+#include <cstring>
+#ifdef __SWITCH__
+#include <switch.h>
+#endif
 #include "UIManagement.hpp"
 #include <stdio.h>
 #include "imgui/imgui_impl_opengl3.h"
@@ -32,9 +38,43 @@ static bool ImguiInit()
 	ImGuiIO& io = ImGui::GetIO();
 	io.DisplaySize = ImVec2{ SCR_W, SCR_H};
 	
-	font25 = io.Fonts->AddFontFromFileTTF(ASSET("opensans.ttf"), 30.0f);
-	font30 = io.Fonts->AddFontFromFileTTF(ASSET("opensans.ttf"), 35.0f);
-	font40 = io.Fonts->AddFontFromFileTTF(ASSET("opensans.ttf"), 40.0f);
+    // Use the Switch OS's Japanese/Latin shared font. No redistributed font file.
+    // Only bake glyphs occurring in the translations to keep applet-mode memory use down.
+#ifdef __SWITCH__
+    Result plResult = plInitialize(PlServiceType_User);
+    if (R_SUCCEEDED(plResult)) {
+        PlFontData sharedFont{};
+        if (R_SUCCEEDED(plGetSharedFontByType(&sharedFont, PlSharedFontType_Standard))
+                && sharedFont.address && sharedFont.size) {
+            static ImVector<ImWchar> glyphRanges;
+            ImFontGlyphRangesBuilder builder;
+            builder.AddRanges(io.Fonts->GetGlyphRangesDefault());
+            for (const auto& entry : Lang::Dictionary()) builder.AddText(entry.second.c_str());
+            builder.AddText("日本語言語設定戻るテーマ一覧保存再起動インストールアンインストール");
+            builder.BuildRanges(&glyphRanges);
+            auto addSharedFont = [&](float px) -> ImFont* {
+                void* copy = malloc(sharedFont.size);
+                if (!copy) return nullptr;
+                memcpy(copy, sharedFont.address, sharedFont.size);
+                ImFontConfig cfg{};
+                cfg.FontDataOwnedByAtlas = true;
+                return io.Fonts->AddFontFromMemoryTTF(copy, (int)sharedFont.size, px, &cfg, glyphRanges.Data);
+            };
+            font25 = addSharedFont(30.0f);
+            font30 = addSharedFont(35.0f);
+            font40 = addSharedFont(40.0f);
+            Lang::japanFontAvailable = font25 && font30 && font40;
+        }
+        plExit();
+    }
+#endif
+    if (!Lang::japanFontAvailable) {
+        // Safe English fallback if the shared font cannot be loaded.
+        font25 = io.Fonts->AddFontFromFileTTF(ASSET("opensans.ttf"), 30.0f);
+        font30 = io.Fonts->AddFontFromFileTTF(ASSET("opensans.ttf"), 35.0f);
+        font40 = io.Fonts->AddFontFromFileTTF(ASSET("opensans.ttf"), 40.0f);
+    }
+    io.Fonts->Build();
 
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	io.ConfigFlags |= ImGuiConfigFlags_IsTouchScreen;
@@ -96,7 +136,9 @@ static bool ImguiInit()
 	style.WindowRounding = 0;
 	style.ItemSpacing = { 15,10 };
 	style.ScrollbarRounding = 8;
-	style.ScrollbarSize = 8;
+	style.ScrollbarSize = 22; // easier to grab on touchscreens
+    style.TouchExtraPadding = ImVec2(9, 9);
+    style.FramePadding = ImVec2(12, 9);
 
 	style.WindowPadding = {};
 	style.WindowBorderSize = 0;

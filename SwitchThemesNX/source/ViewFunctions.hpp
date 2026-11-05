@@ -1,3 +1,4 @@
+#include "Localization.hpp"
 #pragma once
 #include "Dialogs.hpp"
 
@@ -56,18 +57,15 @@ namespace Utils
 
 	void ImGuiDragWithLastElement(); //Defined in UI.cpp
 
-	static inline void ImGuiSetWindowScrollable() 
-	{
-		if (!AnyNavButtonPressed()) {
-			ImGui::SetCursorPos({ 0, 0 });
-			ImGui::PushStyleColor(ImGuiCol_Button, { 0,0,0,0 });
-			ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0,0,0,0 });
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0,0,0,0 });
-			ImGui::Button("##drag", ImGui::GetCurrentWindow()->ContentSize - ImVec2(2,2));
-			ImGuiDragWithLastElement();
-			ImGui::PopStyleColor(3);
-		}
-	}
+	static inline void ImGuiSetWindowScrollable()
+    {
+        // Original full-window invisible button swallowed touch taps on UI controls.
+        // Drag empty space to scroll without overlaying interactive widgets.
+        if (ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByActiveItem)
+            && ImGui::IsMouseDragging(0, 8.0f) && !ImGui::IsAnyItemActive()) {
+            ImGui::SetScrollY(ImGui::GetScrollY() - ImGui::GetIO().MouseDelta.y);
+        }
+    }
 
 	static inline bool ItemNotDragging() 
 	{
@@ -80,7 +78,7 @@ namespace Utils
 		auto sz = ImGui::CalcTextSize(str.data(), str.data() + str.size(), false, win);
 
 		ImGui::SetCursorPosX(win/ 2 - sz.x / 2);
-		ImGui::TextUnformatted(str.data(), str.data() + str.size());
+		ImGui::TextUnformatted(Lang::T(std::string(str)));
 	}
 
 	template <size_t N, typename T>
@@ -99,14 +97,14 @@ namespace Utils
 		float TotX = 0;
 		for (size_t i = 0; i < N; i++)
 		{
-			auto sz = ImGui::CalcTextSize(str(i), nullptr, false, win);
+			auto sz = ImGui::CalcTextSize(Lang::T(str(i)), nullptr, false, win);
 			TotX += ImGui::CalcItemSize({}, sz.x + style.FramePadding.x * 2.0f, sz.y + style.FramePadding.y * 2.0f).x;
 		}
 		ImGui::SetCursorPosX((win / 2 - TotX / 2) - (N - 1) * style.FramePadding.x * 2);
 		int res = -1;
 		for (size_t i = 0; i < N; i++)
 		{
-			if (ImGui::Button(str(i)))
+			if (ImGui::Button(Lang::T(str(i)), ImVec2(0, 46)))
 				res = i;
 
 			if (i == 0 && firstId)
@@ -125,18 +123,18 @@ namespace Utils
 
 		if (width <= 0)
 		{
-			auto sz = ImGui::CalcTextSize(button.data(), nullptr, false, win);
+			auto sz = ImGui::CalcTextSize(Lang::T(button.c_str()), nullptr, false, win);
 			width = ImGui::CalcItemSize({}, sz.x + style.FramePadding.x * 2.0f, sz.y + style.FramePadding.y * 2.0f).x;
 		}
 
 		ImGui::SetCursorPosX((win / 2 - width / 2));
-		return ImGui::Button(button.c_str(), { width, 0 });
+		return ImGui::Button(Lang::T(button.c_str()), { width, 46 });
 	}
 
 	static inline void ImGuiRightString(std::string_view str)
 	{
-		ImGui::SetCursorPosX(ImGui::GetWindowWidth() - ImGui::CalcTextSize(str.data(), str.data() + str.size()).x - 2);
-		ImGui::TextUnformatted(str.data(), str.data() + str.size());
+		ImGui::SetCursorPosX(ImGui::GetWindowWidth() - ImGui::CalcTextSize(Lang::T(std::string(str))).x - 2);
+		ImGui::TextUnformatted(Lang::T(std::string(str)));
 	}
 
 	static inline bool PageLeaveFocusInput(bool AllowLeft = true)

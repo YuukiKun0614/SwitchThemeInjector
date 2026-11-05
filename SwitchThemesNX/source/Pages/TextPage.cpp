@@ -1,3 +1,4 @@
+#include "../Localization.hpp"
 #include "TextPage.hpp"
 #include "../Version.hpp"
 #include "../ViewFunctions.hpp"
@@ -22,7 +23,7 @@ void TextPage::Render(int X, int Y)
 {
 	Utils::ImGuiSetupPage(this, X, Y);
 	ImGui::PushFont(font25);
-	ImGui::TextWrapped(c_str);
+	ImGui::TextWrapped(Lang::T(c_str));
 	ImGui::PopFont();
 	Utils::ImGuiSetWindowScrollable();
 	Utils::ImGuiCloseWin();

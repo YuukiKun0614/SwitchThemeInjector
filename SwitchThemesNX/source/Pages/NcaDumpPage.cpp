@@ -1,3 +1,4 @@
+#include "../Localization.hpp"
 #include <string>
 
 #include "NcaDumpPage.hpp"
@@ -44,7 +45,7 @@ void NcaDumpPage::Render(int X, int Y)
 		"This option allows extracting the common szs files (for example, ResidentMenu.szs) to your SD card so you can create custom layouts. For simply installing themes you do not need this feature, it is done automaticaly done during installation."
 	);
 
-	if (ImGui::Button("Extract szs layout files"))
+	if (ImGui::Button(Lang::T("Extract szs layout files")))
 	{
 		PushFunction([]() 
 		{
@@ -64,7 +65,7 @@ void NcaDumpPage::Render(int X, int Y)
 
 				WriteExtractedVersion();
 
-				Dialog("The files have been extracted to the themes/systemData/extracted/ folder on your SD card.");
+				Dialog(Lang::T("The files have been extracted to the themes/systemData/extracted/ folder on your SD card."));
 			}
 			catch (const std::exception& ex)
 			{
@@ -76,9 +77,9 @@ void NcaDumpPage::Render(int X, int Y)
 	ImGui::NewLine();
 
 	ImGui::TextWrapped(
-		"If you need the complete set of files of the home menu you can extract the raw NCA. To extract this you will need hactool or similar software on your computer."
+		Lang::T("If you need the complete set of files of the home menu you can extract the raw NCA. To extract this you will need hactool or similar software on your computer.")
 	);
-	if (ImGui::Button("Extract raw NCA files"))
+	if (ImGui::Button(Lang::T("Extract raw NCA files")))
 	{
 		PushFunction([]()
 			{
@@ -98,7 +99,7 @@ void NcaDumpPage::Render(int X, int Y)
 					nca = hactool::GetNca(ThemeTargetInfo::UserPageID);
 					fs::WriteFile(fs::path::SystemDataFolder + "nca/" + ThemeTargetInfo::TitleIdToString(ThemeTargetInfo::UserPageID) + ".nca", nca);
 
-					Dialog("The files have been extracted to the themes/systemData/nca folder on your SD card.");
+					Dialog(Lang::T("The files have been extracted to the themes/systemData/nca folder on your SD card."));
 				}
 				catch (const std::exception& ex)
 				{

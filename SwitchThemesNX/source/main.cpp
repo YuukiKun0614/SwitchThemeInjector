@@ -1,3 +1,4 @@
+#include "Localization.hpp"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -45,8 +46,8 @@ static inline void ImguiBindController()
 	io.NavInputs[ImGuiNavInput_Activate] = KeyPressed(GLFW_GAMEPAD_BUTTON_A);
 	io.NavInputs[ImGuiNavInput_Cancel] = KeyPressed(GLFW_GAMEPAD_BUTTON_B);
 
-	io.NavActive = true;
-	io.NavVisible = true;
+	io.NavActive = glfwJoystickIsGamepad(GLFW_JOYSTICK_1);
+	io.NavVisible = io.NavActive;
 }
 
 static bool IsRendering = false;
@@ -342,6 +343,7 @@ static void SetupSysVer()
 int main(int argc, char **argv)
 {
 	PlatformInit();
+    Lang::Init(); // Load language and optional translation overrides before fonts are built.
 
 	if (!GFX::Init())
 	{

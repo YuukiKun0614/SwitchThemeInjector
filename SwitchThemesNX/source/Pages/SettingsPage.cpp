@@ -1,3 +1,4 @@
+#include "../Localization.hpp"
 #include <vector>
 #include "SettingsPage.hpp"
 #include "../fs.hpp"
@@ -96,7 +97,7 @@ bool SettingsPage::InstallSysmodule()
 {
 	if (!bundledSysmodule)
 	{
-		Dialog("Failed to install the sysmodule. This version of the theme installer was built without the sysmodule binary.");
+		Dialog(Lang::T("Failed to install the sysmodule. This version of the theme installer was built without the sysmodule binary."));
 		return false;
 	}
 
@@ -108,13 +109,13 @@ bool SettingsPage::InstallSysmodule()
 		fs::WriteFile(fs::path::FsMitmFolder() + SYSMODULE_ID "/flags/boot2.flag", std::vector<u8>{ 'a' });
 		
 		ReloadSysmoduleInfo();
-		Dialog("The sysmodule has been installed. Restart your console to apply the changes.");
+		Dialog(Lang::T("The sysmodule has been installed. Restart your console to apply the changes."));
 		
 		return true;
 	}
 	catch (const std::exception& ex)
 	{
-		Dialog("Error installing sysmodule: "s + ex.what());
+		Dialog(Lang::T("Error installing sysmodule: ")s + ex.what());
 		return false;
 	}
 }
@@ -130,13 +131,13 @@ bool SettingsPage::RemoveSysmodule(bool dialogs)
 		ReloadSysmoduleInfo();
 
 		if (dialogs)
-			Dialog("The sysmodule has been uninstalled. Restart your console to apply the changes.");
+			Dialog(Lang::T("The sysmodule has been uninstalled. Restart your console to apply the changes."));
 
 		return true;
 	}
 	catch (const std::exception& ex)
 	{
-		Dialog("Error uninstalling sysmodule: "s + ex.what());
+		Dialog(Lang::T("Error uninstalling sysmodule: ")s + ex.what());
 		return false;
 	}
 }
@@ -144,20 +145,20 @@ bool SettingsPage::RemoveSysmodule(bool dialogs)
 void SettingsPage::UISysmoduleAlreadyInstalled() 
 {
 	ImGui::PushStyleColor(ImGuiCol_Text, Colors::Highlight);
-	ImGui::Text("The sysmodule v%d is currently installed.", *sysmoduleInstalled);
+	ImGui::Text(Lang::T("The sysmodule v%d is currently installed."), *sysmoduleInstalled);
 	ImGui::PopStyleColor();
 	ImGui::SameLine();
-	if (ImGui::Button("Uninstall"))
+	if (ImGui::Button(Lang::T("Uninstall")))
 		PushFunction([]() { RemoveSysmodule(true); });
 }
 
 void SettingsPage::UISysmoduleUpdateAvailable() 
 {
 	ImGui::PushStyleColor(ImGuiCol_Text, Colors::Highlight);
-	ImGui::Text("The sysmodule v%d is currently installed. A new version is available.", *sysmoduleInstalled);
+	ImGui::Text(Lang::T("The sysmodule v%d is currently installed. A new version is available."), *sysmoduleInstalled);
 	ImGui::PopStyleColor();
 
-	if (ImGui::Button("Uninstall"))
+	if (ImGui::Button(Lang::T("Uninstall")))
 		PushFunction([]() { RemoveSysmodule(true); });
 	
 	// Cursor hack, this should be the first item
@@ -167,7 +168,7 @@ void SettingsPage::UISysmoduleUpdateAvailable()
 
 	// TODO: actually due to imgui handling events together as our tab manager using the dpan right input to switch to the settings page will focus this instead
 	// It's an edge case and fixing it is probably more trouble than it's worth.
-	if (ImGui::Button("Update now"))
+	if (ImGui::Button(Lang::T("Update now")))
 		PushFunction([]() { InstallSysmodule(); });
 
 	focusItemPreventsLeft = ImGui::GetFocusID() == ImGui::GetCurrentWindow()->DC.LastItemId;
@@ -176,18 +177,18 @@ void SettingsPage::UISysmoduleUpdateAvailable()
 void SettingsPage::UISysmoduleBuildMissing()
 {
 	ImGui::PushStyleColor(ImGuiCol_Text, Colors::Red);
-	ImGui::TextWrapped("This version of the theme installer does not contain the sysmodule binary.");
+	ImGui::TextWrapped(Lang::T("This version of the theme installer does not contain the sysmodule binary."));
 	ImGui::PopStyleColor();
 }
 
 void SettingsPage::UISysmoduleNotInstalled() 
 {
 	ImGui::PushStyleColor(ImGuiCol_Text, Colors::Red);
-	ImGui::Text("The sysmodule is currently not installed.");
+	ImGui::Text(Lang::T("The sysmodule is currently not installed."));
 	ImGui::PopStyleColor();
 
 	ImGui::SameLine();
-	if (ImGui::Button("Install now"))
+	if (ImGui::Button(Lang::T("Install now")))
 		PushFunction([]() { InstallSysmodule(); });
 }
 
@@ -213,11 +214,24 @@ void SettingsPage::Render(int X, int Y)
 	Utils::ImGuiSetupPage(this, X, Y);
 	ImGui::PushFont(font25);
 
+    // Always render the language switcher, even when saved setting is Japanese.
+    ImGui::PushFont(font30);
+    ImGui::TextUnformatted(Lang::T("Language"));
+    ImGui::PopFont();
+    ImGui::TextWrapped(Lang::T("Choose a display language. Changes are saved automatically and used on the next launch."));
+    const bool inEnglish = Lang::Get() == Lang::Language::English;
+    if (ImGui::RadioButton(Lang::T("English"), inEnglish)) Lang::Set(Lang::Language::English);
+    ImGui::SameLine();
+    if (ImGui::RadioButton(Lang::T("Japanese / 日本語"), !inEnglish)) Lang::Set(Lang::Language::Japanese);
+    ImGui::NewLine();
+    ImGui::Separator();
+    ImGui::NewLine();
+
 	ImGui::PushFont(font30);
-	ImGui::TextUnformatted("Update detection sysmodule v3");
+	ImGui::TextUnformatted(Lang::T("Update detection sysmodule v3"));
 	ImGui::PopFont();
 
-	ImGui::TextWrapped("This sysmodule automatically removes themes when the system firmware changes. This prevents crashes after updates but you still need to remove leftover files from the uninstall page after updating.");
+	ImGui::TextWrapped(Lang::T("This sysmodule automatically removes themes when the system firmware changes. This prevents crashes after updates but you still need to remove leftover files from the uninstall page after updating."));
 	if (sysmoduleInstalled)
 	{
 		if (!bundledSysmodule)
@@ -228,7 +242,7 @@ void SettingsPage::Render(int X, int Y)
 		else if (*sysmoduleInstalled < *bundledSysmodule) 
 		{
 			UISysmoduleUpdateAvailable();
-			ImGui::TextWrapped("This update fixes a number of bugs reported by users.");
+			ImGui::TextWrapped(Lang::T("This update fixes a number of bugs reported by users."));
 		}
 		else
 			UISysmoduleAlreadyInstalled();
@@ -249,22 +263,22 @@ void SettingsPage::Render(int X, int Y)
 	ImGui::NewLine();
 
 	ImGui::PushFont(font30);
-	ImGui::TextUnformatted("NXTheme settings");
+	ImGui::TextUnformatted(Lang::T("NXTheme settings"));
 	ImGui::PopFont();
 
-	ImGui::TextWrapped("These settings only apply for installing nxthemes and are not saved, you have to switch them back every time you launch this app");
+	ImGui::TextWrapped(Lang::T("These settings only apply for installing nxthemes and are not saved, you have to switch them back every time you launch this app"));
 
-	ImGui::Text("Home menu layout compatibility options");
-	ImGui::RadioButton("Decide automatically (default)", (int*)&Settings::HomeMenuCompat, (int)SwitchThemesCommon::LayoutCompatibilityOption::Default);
-	ImGui::RadioButton("Force original home menu applet icons (firmware <= 10.0)", (int*)&Settings::HomeMenuCompat, (int)SwitchThemesCommon::LayoutCompatibilityOption::Firmware10);
-	ImGui::RadioButton("Force home menu layout with the NS online icon (firmware 11.0)", (int*)&Settings::HomeMenuCompat, (int)SwitchThemesCommon::LayoutCompatibilityOption::Firmware11);
-	ImGui::RadioButton("Do not apply compatibility fixes", (int*)&Settings::HomeMenuCompat, (int)SwitchThemesCommon::LayoutCompatibilityOption::DisableFixes);
+	ImGui::Text(Lang::T("Home menu layout compatibility options"));
+	ImGui::RadioButton(Lang::T("Decide automatically (default)"), (int*)&Settings::HomeMenuCompat, (int)SwitchThemesCommon::LayoutCompatibilityOption::Default);
+	ImGui::RadioButton(Lang::T("Force original home menu applet icons (firmware <= 10.0)"), (int*)&Settings::HomeMenuCompat, (int)SwitchThemesCommon::LayoutCompatibilityOption::Firmware10);
+	ImGui::RadioButton(Lang::T("Force home menu layout with the NS online icon (firmware 11.0)"), (int*)&Settings::HomeMenuCompat, (int)SwitchThemesCommon::LayoutCompatibilityOption::Firmware11);
+	ImGui::RadioButton(Lang::T("Do not apply compatibility fixes"), (int*)&Settings::HomeMenuCompat, (int)SwitchThemesCommon::LayoutCompatibilityOption::DisableFixes);
 
 	ImGui::NewLine();
 
-	ImGui::Text("Layout parts options");
-	ImGui::Checkbox("Enable custom icons", &Settings::UseIcons);
-	ImGui::Checkbox("Enable extra layouts (eg. common.szs)", &Settings::UseCommon);
+	ImGui::Text(Lang::T("Layout parts options"));
+	ImGui::Checkbox(Lang::T("Enable custom icons"), &Settings::UseIcons);
+	ImGui::Checkbox(Lang::T("Enable extra layouts (eg. common.szs)"), &Settings::UseCommon);
 
 	ImGui::NewLine();
 

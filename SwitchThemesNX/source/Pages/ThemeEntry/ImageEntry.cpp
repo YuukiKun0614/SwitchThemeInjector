@@ -1,3 +1,4 @@
+#include "../../Localization.hpp"
 #include <string>
 #include <vector>
 #include <tuple>
@@ -185,7 +186,7 @@ void InstallImageDialog::ApplyToBootloader()
 {
 	if (!fs::BootloaderDirectoryExists())
 	{
-		Dialog("Bootloader directory not found. Make sure hekate is installed and try again.");
+		Dialog(Lang::T("Bootloader directory not found. Make sure hekate is installed and try again."));
 		return;
 	}
 
@@ -197,17 +198,17 @@ void InstallImageDialog::ApplyToBootloader()
 
 		if (*hekateBootWarning)
 		{
-			Dialog("Warning: bootwait is set to 0 in your hekate_ipl.ini config file.\n\nThis will cause the bootloader to not display the boot image. To use boot images you need to set bootwait to at least 1.");;
+			Dialog(Lang::T("Warning: bootwait is set to 0 in your hekate_ipl.ini config file.\n\nThis will cause the bootloader to not display the boot image. To use boot images you need to set bootwait to at least 1."));;
 			hekateBootWarning = false;
 		}
 
 		auto image = ImageConversion::ToBootloaderBMP(imageBytes);
 		fs::WriteFile(fs::path::BootlogoPath, image.Data);
-		Dialog("Image installed to the bootloader successfully. Reboot to see the changes.");
+		Dialog(Lang::T("Image installed to the bootloader successfully. Reboot to see the changes."));
 	}
 	catch (const std::exception& ex)
 	{
-		Dialog("Failed to install the image to the bootloader: " + std::string(ex.what()));
+		Dialog(Lang::T("Failed to install the image to the bootloader: ") + std::string(ex.what()));
 		return;
 	}
 }
@@ -230,7 +231,7 @@ void InstallImageDialog::ApplyToPart(const std::string& part)
 		auto conversion = ImageConversion::ToDDS(imageBytes, false, 1280, 720, true);
 		if (!conversion.IsSuccess())
 		{
-			Dialog("Failed to convert the image to dds: " + conversion.ErrorMessage);
+			Dialog(Lang::T("Failed to convert the image to dds: ") + conversion.ErrorMessage);
 			return;
 		}
 
@@ -240,7 +241,7 @@ void InstallImageDialog::ApplyToPart(const std::string& part)
 	auto entry = NxEntry("theme", std::move(files));
 	if (!entry.CanInstall())
 	{
-		Dialog("Failed to build the theme file. Open an issue on github.\n" + entry.CannotInstallReason);
+		Dialog(Lang::T("Failed to build the theme file. Open an issue on github.\n") + entry.CannotInstallReason);
 		return;
 	}
 
@@ -317,7 +318,7 @@ void InstallImageDialog::RenderBottom()
 	{
 		auto x = ImGui::GetCursorPosX();
 		ImGui::PushStyleColor(ImGuiCol_Text, Colors::Red);
-		ImGui::Text("This image was automatically resized. For optimal results use 1280x720 images.");
+		ImGui::Text(Lang::T("This image was automatically resized. For optimal results use 1280x720 images."));
 		ImGui::PopStyleColor();
 
 		ImGui::SetCursorPosX(x);
@@ -328,15 +329,15 @@ void InstallImageDialog::RenderBottom()
 		auto x = ImGui::GetCursorPosX();
 		ImGui::PushStyleColor(ImGuiCol_Text, Colors::Red);
 		if (UseLowMemory)
-			ImGui::Text("Failed to load previews. You are running in applet mode, this is not supported. Relaunch with title takeover");
+			ImGui::Text(Lang::T("Failed to load previews. You are running in applet mode, this is not supported. Relaunch with title takeover"));
 		else
-			ImGui::Text("Failed to load previews.");
+			ImGui::Text(Lang::T("Failed to load previews."));
 
 		if (!previewError.empty())
 		{
 			ImGui::SetCursorPosX(x);
 			ImGui::PushTextWrapPos(SCR_W - PaddingSizeX);
-			ImGui::TextWrapped("%s", previewError.c_str());
+			ImGui::TextWrapped(Lang::T("%s"), previewError.c_str());
 			ImGui::PopTextWrapPos();
 		}
 

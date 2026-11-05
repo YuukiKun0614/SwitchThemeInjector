@@ -1,3 +1,4 @@
+#include "../Localization.hpp"
 #include "RemoteInstallPage.hpp"
 #include "../ViewFunctions.hpp"
 #include <numeric>
@@ -41,18 +42,18 @@ void RemoteInstallPage::Render(int X, int Y)
 	if (!RemoteInstallFile)
 	{
 		ImGui::PushFont(font40);
-		ImGui::Text("Download from the internet");
+		ImGui::Text(Lang::T("Download from the internet"));
 		ImGui::PopFont();
 
 		if (UseLowMemory)
 		{
 			ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 0, 0, 255));
-			ImGui::TextWrapped("This feature is not available while running in applet mode, launch with title takeover.");
+			ImGui::TextWrapped(Lang::T("This feature is not available while running in applet mode, launch with title takeover."));
 			ImGui::PopStyleColor();
 		}
 		else
 		{
-			ImGui::TextWrapped("Select a provider from the list to download themes.\nYou can add custom providers as explained in the wiki on Github.");
+			ImGui::TextWrapped(Lang::T("Select a provider from the list to download themes.\nYou can add custom providers as explained in the wiki on Github."));
 			ImGui::PushItemWidth(500);
 			if (ImGui::Combo("###ProviderSelection", &ProviderIndex, ComboBoxApiProviderGetter, nullptr, RemoteInstall::API::ProviderCount()))
 				SelectedProviderStatic = RemoteInstall::API::GetProvider(ProviderIndex).Static;
@@ -63,16 +64,16 @@ void RemoteInstallPage::Render(int X, int Y)
 
 			if (!SelectedProviderStatic) {
 				ImGui::SameLine();
-				if (ImGui::Button("Random themes"))
+				if (ImGui::Button(Lang::T("Random themes")))
 					StartRemoteInstallFixed(RemoteInstall::FixedTypes::Random);
 				CurItemBlockLeft();
 				ImGui::SameLine();
-				if (ImGui::Button("New themes"))
+				if (ImGui::Button(Lang::T("New themes")))
 					StartRemoteInstallFixed(RemoteInstall::FixedTypes::Recent);
 				CurItemBlockLeft();
 			}
 
-			ImGui::TextWrapped("Or search a theme by ID");
+			ImGui::TextWrapped(Lang::T("Or search a theme by ID"));
 			ImGui::PushStyleColor(ImGuiCol_Button, 0xDFDFDFDF);
 			ImGui::PushStyleColor(ImGuiCol_ButtonActive, 0xEFEFEFEF);
 			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, 0xFFFFFFFF);
@@ -81,17 +82,17 @@ void RemoteInstallPage::Render(int X, int Y)
 				SetRemoteInstallCode(PlatformTextInput(RemoteInstallCode.c_str()));
 			ImGui::PopStyleColor(4);
 			ImGui::SameLine(0, 20);
-			if (ImGui::Button("Search###SearchBtn", { 150, 0 }) && RemoteInstallCode != "")
+			if (ImGui::Button(Lang::T("Search###SearchBtn"), { 150, 0 }) && RemoteInstallCode != "")
 				StartRemoteInstallByCode();
 			CurItemBlockLeft();
-			ImGui::TextWrapped("IDs are not names, searching a theme by name won't work, open your provider in the browser, select a theme and it should show its unique ID.");
+			ImGui::TextWrapped(Lang::T("IDs are not names, searching a theme by name won't work, open your provider in the browser, select a theme and it should show its unique ID."));
 		}
 
 		ImGui::Spacing();
 		ImGui::Separator();
 		ImGui::Spacing();
 		ImGui::PushFont(font40);
-		ImGui::Text("Remote install from NxThemeTool");
+		ImGui::Text(Lang::T("Remote install from NxThemeTool"));
 		ImGui::PopFont();
 	}
 
@@ -108,11 +109,11 @@ void RemoteInstallPage::Render(int X, int Y)
 		if (ImGui::IsWindowFocused())
 			Utils::ImGuiSelectItem();
 
-		ImGui::TextWrapped("Press A to install, B to cancel");
+		ImGui::TextWrapped(Lang::T("Press A to install, B to cancel"));
 	}
 	else 
 	{
-		ImGui::TextWrapped("You can install a theme directly from your pc with NxThemeTool, use the install command line option.");
+		ImGui::TextWrapped(Lang::T("You can install a theme directly from your pc with NxThemeTool, use the install command line option."));
 		if (ImGui::Button(BtnStart.c_str()))
 		{
 			if (!server.IsHosting())
@@ -121,8 +122,8 @@ void RemoteInstallPage::Render(int X, int Y)
 				StopServer();
 		}
 		if (UseLowMemory) PAGE_RESET_FOCUS;
-		ImGui::TextWrapped("Keep the menu focus on this page or requests won't be executed");
-		ImGui::Checkbox("Automatically install and reboot", &AutoInstall);
+		ImGui::TextWrapped(Lang::T("Keep the menu focus on this page or requests won't be executed"));
+		ImGui::Checkbox(Lang::T("Automatically install and reboot"), &AutoInstall);
 	}
 	Utils::ImGuiSetWindowScrollable();
 
@@ -211,7 +212,7 @@ void RemoteInstallPage::StopServer()
 
 void RemoteInstallPage::DialogError(const std::string &msg)
 {
-	Dialog("There was an error, try again.\n" + msg);
+	Dialog(Lang::T("There was an error, try again.\n") + msg);
 }
 
 const RemoteInstall::Provider& RemoteInstallPage::SelectedProvider()

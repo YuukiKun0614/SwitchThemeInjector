@@ -1,3 +1,4 @@
+#include "../../Localization.hpp"
 #include <string>
 #include <vector>
 #include <utility>
@@ -294,7 +295,7 @@ bool NxEntry::PatchLayout(SwitchThemesCommon::SzsPatcher& patcher, std::string_v
 void NxEntry::OpenOptions()
 {
 	if (!theme.HasMainImage())
-		Dialog("This theme has no wallpaper image");
+		Dialog(Lang::T("This theme has no wallpaper image"));
 	else
 		PushPage(new ThemeOptionsDialog(FileName, theme));
 }

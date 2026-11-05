@@ -1,3 +1,4 @@
+#include "../Localization.hpp"
 #include <string>
 #include "../UI/UI.hpp"
 
@@ -18,9 +19,9 @@ class RebootPage : public IPage
 			ImGui::PushFont(font30);
 			ImGui::SetCursorPos({ 5, 10 });
 
-			ImGui::TextUnformatted("Rebooting your console will apply the changes you made.");
-			ImGui::TextWrapped("This is a shortcut to the system's reboot button. If your CFW doesn't provide reboot to payload you will need a way to inject a payload from RCM.");
-			if (ImGui::Button("Reboot"))
+			ImGui::TextUnformatted(Lang::T("Rebooting your console will apply the changes you made."));
+			ImGui::TextWrapped(Lang::T("This is a shortcut to the system's reboot button. If your CFW doesn't provide reboot to payload you will need a way to inject a payload from RCM."));
+			if (ImGui::Button(Lang::T("Reboot")))
 			{
 				PlatformReboot();
 			}

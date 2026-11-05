@@ -1,3 +1,4 @@
+#include "../../Localization.hpp"
 #include <sstream>
 #include <filesystem>
 #include "List.hpp"
@@ -61,10 +62,10 @@ void RemoteInstall::ListPage::Render(int X, int Y)
 	ImGui::Spacing();
 
 	ImGui::SetCursorPosX(15);
-	if (ImGui::Button("Select none"))
+	if (ImGui::Button(Lang::T("Select none")))
 		ApplySelection(false);
 	ImGui::SameLine();
-	if (ImGui::Button("Select all"))
+	if (ImGui::Button(Lang::T("Select all")))
 		ApplySelection(true);
 
 	//From https://github.com/ocornut/imgui/issues/934#issuecomment-340231002
@@ -81,7 +82,7 @@ void RemoteInstall::ListPage::Render(int X, int Y)
 	Utils::ImGuiSelectItemOnce();
 
 	ImGui::SetCursorPos({ 20, 15 });
-	if (ImGui::Button(" X "))
+	if (ImGui::Button(Lang::T(" X ")))
 		PopPage(this);
 
 	ImGui::End();

@@ -1,3 +1,4 @@
+#include "../../Localization.hpp"
 #include "Detail.hpp"
 #include "Worker.hpp"
 #include "../../fs.hpp"
@@ -31,21 +32,21 @@ void RemoteInstall::DetailPage::Render(int X, int Y)
 	const float BtnW = SCR_W / 3.0f;
 
 	ImGui::SetCursorPosX(SCR_W / 2 - BtnW / 2);
-	if (ImGui::Button("Install", ImVec2(BtnW, 0)))
+	if (ImGui::Button(Lang::T("Install"), ImVec2(BtnW, 0)))
 		UserDownload(Action::DownloadInstall);
 	Utils::ImGuiSelectItemOnce();
 	
 	ImGui::SetCursorPosX(SCR_W / 2 - BtnW / 2);
-	if (ImGui::Button("Install but don't save to the SD card", ImVec2(BtnW, 0)))
+	if (ImGui::Button(Lang::T("Install but don't save to the SD card"), ImVec2(BtnW, 0)))
 		UserDownload(Action::Install);
 	
 	ImGui::SetCursorPosX(SCR_W / 2 - BtnW / 2);
-	if (ImGui::Button("Just download", ImVec2(BtnW, 0)))
+	if (ImGui::Button(Lang::T("Just download"), ImVec2(BtnW, 0)))
 		UserDownload(Action::Download);
 	
 	ImGui::NewLine();
 	ImGui::SetCursorPosX(SCR_W / 2 - BtnW / 2);
-	if (ImGui::Button("Cancel", ImVec2(BtnW, 0)))
+	if (ImGui::Button(Lang::T("Cancel"), ImVec2(BtnW, 0)))
 		PopPage(this);
 
 	ImGui::End();

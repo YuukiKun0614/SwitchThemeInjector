@@ -1,3 +1,4 @@
+#include "../Localization.hpp"
 #include <algorithm>
 
 #include "UI.hpp"
@@ -63,11 +64,11 @@ void TabRenderer::Render(int X, int Y)
 		auto cursor = ImGui::GetCursorPos();
 		if (page->NotificationIcon)
 		{
-			auto len = ImGui::CalcTextSize(page->Name.c_str()).x;
+			auto len = ImGui::CalcTextSize(Lang::T(page->Name.c_str())).x;
 			ImGui::GetCurrentWindow()->DrawList->AddCircleFilled({ cursor.x + len + 12, cursor.y + 12 }, 5, 0xffc9ff00);
 		}
 		
-		if (ImGui::Button(page->Name.c_str(), ImVec2(250,0)))
+		if (ImGui::Button(Lang::T(page->Name.c_str()), ImVec2(255,45)))
 		{
 			SetFocused(count);
 			selectedIndex = count;
@@ -82,7 +83,7 @@ void TabRenderer::Render(int X, int Y)
 			ImGui::GetCurrentWindow()->DrawList->AddRectFilled({ BaseLabelX, cursor.y }, { BaseLabelX + 4, ImGui::GetCursorPosY() - 10}, 0xffc9ff00);
 		}
 
-		if (!ControlHasFocus && GImGui->NavId == ImGui::GetID(page->Name.c_str()))
+		if (!ControlHasFocus && GImGui->NavId == ImGui::GetID(Lang::T(page->Name.c_str())))
 			selectedIndex = count;
 
 		++count;
@@ -104,7 +105,7 @@ void TabRenderer::Render(int X, int Y)
 		auto titleSize = ImGui::CalcTextSize(Title.c_str());
 		ImGui::PopFont();
 	
-		dList->AddText(font25, 30, { TopLine.x + titleSize.x + 20 , 30 }, 0xff2020ff, "Applet mode");
+		dList->AddText(font25, 30, { TopLine.x + titleSize.x + 20 , 30 }, 0xff2020ff, Lang::T("Applet mode"));
 	}
 
 	dList->AddRectFilled(TopLine, TopLine + TopLineSz, 0xffffffff);
