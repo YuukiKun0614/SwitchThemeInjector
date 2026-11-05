@@ -72,7 +72,7 @@ void UninstallPage::Render(int X, int Y)
 		PushFunction([]() {
 			if (!YesNoPage::Ask(
 				"This will remove the installed theme for all the supported home menu parts.\n"
-				"Do you want to continue ?")
+				"Do you want to continue ?"
 			))
 				return;
 
@@ -89,7 +89,7 @@ void UninstallPage::Render(int X, int Y)
 		PushFunction([]() {
 			if (!YesNoPage::Ask(
 				"This will remove the custom hekate boot screen.\n"
-				"Do you want to continue ?")
+				"Do you want to continue ?"
 			))
 				return;
 
